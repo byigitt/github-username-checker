@@ -24,6 +24,8 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const SLEEP_MS = Number(process.env.SLEEP_MS ?? 1500);
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
+// Max real network checks per run (0 = unlimited). Lets you batch a big list.
+const MAX = Number(process.env.MAX ?? 0);
 const CACHE_FILE = "checked.json";
 const CONCLUSIVE = new Set(["TAKEN", "AVAILABLE"]);
 
@@ -75,10 +77,16 @@ async function main() {
 
   const results = [];
   let skipped = 0;
+  let checks = 0;
   // Only sleep between actual network calls, not skipped (cached) ones.
   let lastWasNetwork = false;
   for (let i = 0; i < usernames.length; i++) {
     const u = usernames[i];
+
+    if (MAX > 0 && checks >= MAX) {
+      console.log(`\nReached MAX=${MAX} checks this run — pausing (resume to continue).`);
+      break;
+    }
 
     // Skip already-known conclusive results.
     if (!force && cache[u] && CONCLUSIVE.has(cache[u].status)) {
@@ -98,6 +106,7 @@ async function main() {
       r = { username: u, status: "ERROR", http: 0, remaining: null, error: String(e) };
     }
     lastWasNetwork = true;
+    checks++;
     results.push(r);
     const mark = r.status === "AVAILABLE" ? "✅" : r.status === "TAKEN" ? "❌" : "⚠️";
     console.log(

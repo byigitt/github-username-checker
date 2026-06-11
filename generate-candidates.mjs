@@ -7,7 +7,9 @@
 //
 // Usage:
 //   node generate-candidates.mjs [count] [minLen] [maxLen]
-// Writes candidates.json (array of usernames).
+//   count = 0  -> ALL matching candidates (rare-first ordering)
+// Writes candidates.json (array of usernames), ordered rarest-first so the
+// most plausibly-available handles are tried before common ones.
 
 import { writeFileSync } from "node:fs";
 
@@ -34,13 +36,16 @@ async function main() {
     (w) => w.length >= minLen && w.length <= maxLen && /^[a-z][a-z0-9]*$/.test(w),
   );
 
-  // "Rare" = tail of frequency list (least common among the 10k). Take the last N.
-  const rare = candidates.slice(-count);
+  // "Rare" = tail of frequency list (least common among the 10k). Order
+  // rarest-first by reversing, then take N (or all when count<=0).
+  const rareFirst = candidates.slice().reverse();
+  const rare = count > 0 ? rareFirst.slice(0, count) : rareFirst;
 
   writeFileSync("candidates.json", JSON.stringify(rare, null, 2) + "\n");
   console.log(
-    `Selected ${rare.length} rare candidates (len ${minLen}-${maxLen}):\n  ${rare.join(", ")}`,
+    `Selected ${rare.length} rare candidates (len ${minLen}-${maxLen}, rarest-first).`,
   );
+  if (rare.length <= 20) console.log("  " + rare.join(", "));
   console.log("Wrote candidates.json");
 }
 
