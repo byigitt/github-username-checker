@@ -1,0 +1,62 @@
+[
+  {
+    "username": "ctrl",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4996"
+  },
+  {
+    "username": "scared",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4995"
+  },
+  {
+    "username": "theta",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4994"
+  },
+  {
+    "username": "bent",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4993"
+  },
+  {
+    "username": "laos",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4992"
+  },
+  {
+    "username": "asylum",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4991"
+  },
+  {
+    "username": "robbie",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4990"
+  },
+  {
+    "username": "stake",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4989"
+  },
+  {
+    "username": "arbor",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4988"
+  },
+  {
+    "username": "poison",
+    "status": "TAKEN",
+    "http": 200,
+    "remaining": "4987"
+  }
+]
