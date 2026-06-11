@@ -23,6 +23,39 @@ Candidates are derived from
 [first20hours/google-10000-english](https://github.com/first20hours/google-10000-english)
 — the 10,000 most common English words in frequency order.
 
-## Status
+## Usage
 
-🚧 Work in progress (built incrementally via a Ralph loop).
+```bash
+# 1. Generate rare candidates  ->  candidates.json
+#    args: [count] [minLen] [maxLen]
+node generate-candidates.mjs 10 3 6
+
+# 2. Check availability  ->  results.json + results.md
+#    Uses GITHUB_TOKEN for the 5000/hr quota if present.
+GITHUB_TOKEN="$(gh auth token)" node check.mjs
+
+# Or check specific handles directly:
+node check.mjs alice some-rare-handle
+```
+
+### Rate limiting
+
+- Default `SLEEP_MS=1500` between calls (override via env).
+- Reads `X-RateLimit-Remaining` and stops early when ≤ 2 left.
+- Unauthenticated: 60/hr. With `GITHUB_TOKEN`: 5000/hr.
+
+## Latest results
+
+Last run checked 10 rare candidates derived from the frequency tail of the
+wordlist — **all 10 were already taken** (short dictionary words go fast on
+GitHub). See [`results.md`](./results.md). The checker's AVAILABLE (404) path is
+verified against unused random handles.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `generate-candidates.mjs` | Mine short/rare candidates from the wordlist |
+| `check.mjs` | Probe availability via the GitHub API (rate-limit aware) |
+| `candidates.json` | Generated candidate usernames |
+| `results.json` / `results.md` | Check output |
