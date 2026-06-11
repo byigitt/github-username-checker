@@ -44,6 +44,13 @@ node check.mjs alice some-rare-handle
 - Reads `X-RateLimit-Remaining` and stops early when ≤ 2 left.
 - Unauthenticated: 60/hr. With `GITHUB_TOKEN`: 5000/hr.
 
+### Persistent cache
+
+Conclusive results (`TAKEN` / `AVAILABLE`) are saved to `checked.json` and
+skipped on later runs — so we never burn API quota re-checking the same handle.
+Transient outcomes (rate-limited / errors) are **not** cached and get retried.
+Use `--force` to ignore the cache and re-check everything.
+
 ## Latest results
 
 Last run checked 10 rare candidates derived from the frequency tail of the
@@ -58,4 +65,5 @@ verified against unused random handles.
 | `generate-candidates.mjs` | Mine short/rare candidates from the wordlist |
 | `check.mjs` | Probe availability via the GitHub API (rate-limit aware) |
 | `candidates.json` | Generated candidate usernames |
+| `checked.json` | Persistent cache of known results (skips re-checks) |
 | `results.json` / `results.md` | Check output |

@@ -1,0 +1,52 @@
+{
+  "ctrl": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:40.529Z"
+  },
+  "scared": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:42.023Z"
+  },
+  "theta": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:43.560Z"
+  },
+  "bent": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:45.102Z"
+  },
+  "laos": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:46.595Z"
+  },
+  "asylum": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:48.066Z"
+  },
+  "robbie": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:49.559Z"
+  },
+  "stake": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:51.072Z"
+  },
+  "arbor": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:52.515Z"
+  },
+  "poison": {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:54.000Z"
+  }
+}

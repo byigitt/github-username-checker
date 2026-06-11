@@ -1,62 +1,72 @@
 [
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:40.529Z",
     "username": "ctrl",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4996"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:42.023Z",
     "username": "scared",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4995"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:43.560Z",
     "username": "theta",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4994"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:45.102Z",
     "username": "bent",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4993"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:46.595Z",
     "username": "laos",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4992"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:48.066Z",
     "username": "asylum",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4991"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:49.559Z",
     "username": "robbie",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4990"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:51.072Z",
     "username": "stake",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4989"
+    "cached": true
   },
   {
+    "status": "TAKEN",
+    "http": 200,
+    "checkedAt": "2026-06-11T11:04:52.515Z",
     "username": "arbor",
-    "status": "TAKEN",
-    "http": 200,
-    "remaining": "4988"
+    "cached": true
   },
   {
-    "username": "poison",
     "status": "TAKEN",
     "http": 200,
-    "remaining": "4987"
+    "checkedAt": "2026-06-11T11:04:54.000Z",
+    "username": "poison",
+    "cached": true
   }
 ]

@@ -9,20 +9,37 @@
 // Rate-limit friendly: sleeps between calls and reads X-RateLimit-Remaining.
 // Auth: if GITHUB_TOKEN (or GH_TOKEN) is set, uses it for the 5000/hr quota.
 //
+// A persistent cache (checked.json) stores final results so already-known
+// usernames are skipped on later runs. Only conclusive statuses are cached
+// (TAKEN / AVAILABLE); transient ones (RATE_LIMITED / ERROR / UNKNOWN) are not,
+// so they get retried next time.
+//
 // Usage:
 //   node check.mjs              # reads candidates.json
 //   node check.mjs alice bob    # checks given usernames
-// Writes results.json + results.md.
+//   node check.mjs --force ...  # ignore cache, re-check everything
+// Writes results.json + results.md and updates checked.json.
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const SLEEP_MS = Number(process.env.SLEEP_MS ?? 1500);
 const TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || "";
+const CACHE_FILE = "checked.json";
+const CONCLUSIVE = new Set(["TAKEN", "AVAILABLE"]);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+function loadCache() {
+  if (!existsSync(CACHE_FILE)) return {};
+  try {
+    return JSON.parse(readFileSync(CACHE_FILE, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
 function loadUsernames() {
-  const args = process.argv.slice(2);
+  const args = process.argv.slice(2).filter((a) => a !== "--force");
   if (args.length) return args;
   return JSON.parse(readFileSync("candidates.json", "utf8"));
 }
@@ -49,34 +66,58 @@ async function checkOne(username) {
 }
 
 async function main() {
+  const force = process.argv.includes("--force");
   const usernames = loadUsernames();
+  const cache = force ? {} : loadCache();
   console.log(
-    `Checking ${usernames.length} usernames (auth: ${TOKEN ? "yes" : "no"}, sleep ${SLEEP_MS}ms)\n`,
+    `Checking ${usernames.length} usernames (auth: ${TOKEN ? "yes" : "no"}, sleep ${SLEEP_MS}ms, cache ${force ? "OFF" : Object.keys(cache).length + " known"})\n`,
   );
 
   const results = [];
+  let skipped = 0;
+  // Only sleep between actual network calls, not skipped (cached) ones.
+  let lastWasNetwork = false;
   for (let i = 0; i < usernames.length; i++) {
     const u = usernames[i];
+
+    // Skip already-known conclusive results.
+    if (!force && cache[u] && CONCLUSIVE.has(cache[u].status)) {
+      const c = cache[u];
+      results.push({ ...c, username: u, cached: true });
+      skipped++;
+      const mark = c.status === "AVAILABLE" ? "✅" : "❌";
+      console.log(`${mark} ${u.padEnd(12)} ${c.status.padEnd(13)} (cached)`);
+      continue;
+    }
+
+    if (lastWasNetwork) await sleep(SLEEP_MS);
     let r;
     try {
       r = await checkOne(u);
     } catch (e) {
       r = { username: u, status: "ERROR", http: 0, remaining: null, error: String(e) };
     }
+    lastWasNetwork = true;
     results.push(r);
     const mark = r.status === "AVAILABLE" ? "✅" : r.status === "TAKEN" ? "❌" : "⚠️";
     console.log(
       `${mark} ${u.padEnd(12)} ${r.status.padEnd(13)} (http ${r.http}, remaining ${r.remaining ?? "?"})`,
     );
 
+    // Persist conclusive results immediately so progress survives interruption.
+    if (CONCLUSIVE.has(r.status)) {
+      cache[u] = { status: r.status, http: r.http, checkedAt: new Date().toISOString() };
+      writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2) + "\n");
+    }
+
     // Respect rate limits: back off if running low.
     if (r.remaining !== null && Number(r.remaining) <= 2) {
       console.log("Rate limit nearly exhausted — stopping early.");
       break;
     }
-    if (i < usernames.length - 1) await sleep(SLEEP_MS);
   }
 
+  if (skipped) console.log(`\nSkipped ${skipped} already-known username(s).`);
   writeFileSync("results.json", JSON.stringify(results, null, 2) + "\n");
 
   const available = results.filter((r) => r.status === "AVAILABLE").map((r) => r.username);
