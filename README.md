@@ -53,10 +53,13 @@ Use `--force` to ignore the cache and re-check everything.
 
 ## Latest results
 
-Last run checked 10 rare candidates derived from the frequency tail of the
-wordlist — **all 10 were already taken** (short dictionary words go fast on
-GitHub). See [`results.md`](./results.md). The checker's AVAILABLE (404) path is
-verified against unused random handles.
+Full sweep of **4,622** rare candidates (3–6 letters, rarest-first) from the
+wordlist: **259 are available** (HTTP 404). See [`AVAILABLE.md`](./AVAILABLE.md)
+for the full list and [`results.md`](./results.md) for the raw table.
+
+> Note: a 404 only means no account currently holds that name. Some may still be
+> [reserved/blocked by GitHub](https://docs.github.com/en/site-policy) and not
+> actually registrable. Verify on the signup page before relying on one.
 
 ## Files
 
